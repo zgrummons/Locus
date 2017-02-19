@@ -11,12 +11,12 @@
     tools:context="com.vetealinfierno.locus.MembersListActivity">
 
     <TextView
-        android:text="MembersList Activity Started!"
+        android:text="Members Page"
         android:textSize="30sp"
+        android:layout_marginTop="5sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView5"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

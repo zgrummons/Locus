@@ -1,6 +1,7 @@
 package com.vetealinfierno.locus;
 //***** 2/18/17 jGAT
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         //handler keeps track of the count down to SPlashTimeOut
         new Handler().postDelayed(new Runnable(){
             @Override
