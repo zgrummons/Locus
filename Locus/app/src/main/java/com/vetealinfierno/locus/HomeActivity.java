@@ -5,17 +5,53 @@ import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
+
 //this is the home activity the contains the home menu for the user
 //consists of the Create_button, Join_button, Leave_button, Map_button, Members_button
 //they appear on screen in the order above for the user
 public class HomeActivity extends AppCompatActivity {
+
+    public Button leaveGroupBtn;
+    public Button mapBtn;
+    public Button membersBtn;
+
     ///called when activity is launched
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        leaveGroupBtn = (Button) findViewById(R.id.leave_button);
+        mapBtn = (Button) findViewById(R.id.map_button);
+        membersBtn = (Button) findViewById(R.id.members_button);
+        ToggleButtons(false);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(QRGenActivity.GROUP_CREATED){
+            ToggleButtons(true);
+        }
+    }
+
+    ///Enables and Disables leave_button, map_button, members_button
+    public void ToggleButtons(boolean status){
+        leaveGroupBtn.setEnabled(status);
+        mapBtn.setEnabled(status);
+        membersBtn.setEnabled(status);
+    }
+
+    //switches the activity to the QR code generator activity, this might not be necessary
+    //to have the generator in a new class but it will do for now. this occurs when the user
+    //presses the create_button on the home screen.
+    public void switchToQRActivity(View view){
+        //this starts a new activity if needed for generating QR code
+        Intent intent = new Intent(this, QRGenActivity.class);
+        startActivity(intent);
     }
 
     //this switches the activity to the joinActivity, the join screen for the user.
@@ -27,17 +63,11 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    //switches the activity to the QR code generator activity, this might not be necessary
-    //to have the generator in a new class but it will do for now. this occurs when the user
-    //presses the create_button on the home screen.
-    public void switchToQRActivity(View view){
-        Intent intent = new Intent(this, QRGenActivity.class);
-        startActivity(intent);
-    }
-
     //TODO: add code that removes member from the database table
     public void LeaveGroupMethod(View view){
+        String message = "//TODO: add code that removes member from the database table";
         //code to leave group goes here
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 
     }
     //TODO: get the google api key for the mapsActivity
@@ -45,6 +75,8 @@ public class HomeActivity extends AppCompatActivity {
     public void switchToMapActivity(View view){
         //Intent intent = new Intent(this, MapsActivity.class);
         //startActivity(intent);
+        String message = "//TODO: get the google api key for the mapsActivity";
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     //switches tot he membersListActivity were we display the list of members int he group
@@ -52,12 +84,6 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent  = new Intent(this, MembersListActivity.class);
         startActivity(intent);
     }
-
-
-
-
-
-
 
 
 

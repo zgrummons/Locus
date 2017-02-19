@@ -10,14 +10,54 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.vetealinfierno.locus.QRGenActivity">
 
-    <TextView
-        android:text="QR code Generator Activity Started!"
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50sp"
+        android:hint="Enter Text to Generate:"
+        android:id="@+id/text"/>
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5sp"
+        android:layout_marginTop="100dp"
+        android:layout_centerHorizontal="true"
+        android:text="GENERATE"
+        android:id="@+id/gen_btn"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="155dp"
+        android:background="@android:color/black"
+        android:id="@+id/view"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_below="@+id/view"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_height="275dp">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/image"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/groupID_text"
+        android:textSize="20sp"
+        android:text="Group ID: N/A"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="QR Code Generator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:textSize="30sp"
         android:id="@+id/textView4"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
