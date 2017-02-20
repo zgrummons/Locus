@@ -34,26 +34,26 @@ public class MembersListActivity extends AppCompatActivity {
 
     ///mock up list for the members list page
     private void populateCarList(){
-        myCars.add(new Car("Ford", 1940, R.drawable.ic_1, "Needs work"));
-        myCars.add(new Car("Chevy", 1950, R.mipmap.ic_2, "Good"));
-        myCars.add(new Car("Toyota", 1980, R.mipmap.ic_3, "Fair"));
-        myCars.add(new Car("Lincoln", 1960, R.mipmap.ic_4, "Poor"));
-        myCars.add(new Car("Subaru", 1990, R.mipmap.ic_5, "Excellent"));
-        myCars.add(new Car("Ford", 1940, R.mipmap.ic_6, "Needs work"));
-        myCars.add(new Car("Chevy", 1950, R.mipmap.ic_7, "Good"));
-        myCars.add(new Car("Toyota", 1980, R.mipmap.ic_8, "Fair"));
-        myCars.add(new Car("Lincoln", 1960, R.mipmap.ic_9, "Poor"));
-        myCars.add(new Car("Subaru", 1990, R.mipmap.ic_10, "Excellent"));
-        myCars.add(new Car("Ford", 1940, R.drawable.ic_1, "Needs work"));
-        myCars.add(new Car("Chevy", 1950, R.mipmap.ic_2, "Good"));
-        myCars.add(new Car("Toyota", 1980, R.mipmap.ic_3, "Fair"));
-        myCars.add(new Car("Lincoln", 1960, R.mipmap.ic_4, "Poor"));
-        myCars.add(new Car("Subaru", 1990, R.mipmap.ic_5, "Excellent"));
-        myCars.add(new Car("Ford", 1940, R.mipmap.ic_6, "Needs work"));
-        myCars.add(new Car("Chevy", 1950, R.mipmap.ic_7, "Good"));
-        myCars.add(new Car("Toyota", 1980, R.mipmap.ic_8, "Fair"));
-        myCars.add(new Car("Lincoln", 1960, R.mipmap.ic_9, "Poor"));
-        myCars.add(new Car("Subaru", 1990, R.mipmap.ic_10, "Excellent"));
+        myCars.add(new Car("Chevrolet 210", 1955, R.drawable.ic_1, "Needs work"));
+        myCars.add(new Car("Volkswagen SB", 1973, R.mipmap.ic_2, "Good"));
+        myCars.add(new Car("Oldsmobile 442", 1968, R.mipmap.ic_3, "Fair"));
+        myCars.add(new Car("Edsel Corsair", 1958, R.mipmap.ic_4, "Poor"));
+        myCars.add(new Car("Boss 429 Mustang", 1969, R.mipmap.ic_5, "Excellent"));
+        myCars.add(new Car("Jaguar E-Type", 1961, R.mipmap.ic_6, "Needs work"));
+        myCars.add(new Car("Maserati Ghibli 4.7", 1969, R.mipmap.ic_7, "Good"));
+        myCars.add(new Car("Dodge Charger", 1969, R.mipmap.ic_8, "Fair"));
+        myCars.add(new Car("Cadillac Eldorado", 1959, R.mipmap.ic_9, "Poor"));
+        myCars.add(new Car("Pontiac Firebird TA", 1978, R.mipmap.ic_10, "Excellent"));
+        myCars.add(new Car("Delorean DMC 12", 1981, R.drawable.ic_1, "Needs work"));
+        myCars.add(new Car("Chevy Bel Air", 1955, R.mipmap.ic_2, "Good"));
+        myCars.add(new Car("Chevy Chevelle", 1969, R.mipmap.ic_3, "Fair"));
+        myCars.add(new Car("Chevy Camaro", 1969, R.mipmap.ic_4, "Poor"));
+        myCars.add(new Car("VW Minibus Type 2", 1950, R.mipmap.ic_5, "Excellent"));
+        myCars.add(new Car("Lotus Esprit", 1993, R.mipmap.ic_6, "Needs work"));
+        myCars.add(new Car("Lamborghini Diablo", 1990, R.mipmap.ic_7, "Good"));
+        myCars.add(new Car("McLaren", 2014, R.mipmap.ic_8, "Fair"));
+        myCars.add(new Car("Aston Martin DB5", 1963, R.mipmap.ic_9, "Poor"));
+        myCars.add(new Car("Ferrari 250 GTO", 1992, R.mipmap.ic_10, "Excellent"));
     }
 
     ///populating the view with myListAdapter

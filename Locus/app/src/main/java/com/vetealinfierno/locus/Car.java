@@ -1,5 +1,5 @@
 package com.vetealinfierno.locus;
-
+//***** 2/18/17 jGAT
 /**
  * Created by johntoland on 2/19/17.
  * Store information about whatever you want
