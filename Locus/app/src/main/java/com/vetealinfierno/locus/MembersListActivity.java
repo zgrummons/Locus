@@ -54,7 +54,6 @@ public class MembersListActivity extends AppCompatActivity {
         myCars.add(new Car("Toyota", 1980, R.mipmap.ic_8, "Fair"));
         myCars.add(new Car("Lincoln", 1960, R.mipmap.ic_9, "Poor"));
         myCars.add(new Car("Subaru", 1990, R.mipmap.ic_10, "Excellent"));
-
     }
 
     ///populating the view with myListAdapter
@@ -75,7 +74,6 @@ public class MembersListActivity extends AppCompatActivity {
                 String message = "You clicked position: " + position + " Which is car make: "
                         + clickedCar.getMake();
                 Toast.makeText(MembersListActivity.this, message, Toast.LENGTH_LONG).show();
-
             }
         });
     }
@@ -86,7 +84,6 @@ public class MembersListActivity extends AppCompatActivity {
         public MyListAdapter(){
             super(MembersListActivity.this, R.layout.item_view, myCars);
         }
-
         @Override
         public View getView(int position, View convertView, ViewGroup parent){
             //making sure we have a view to work with
@@ -112,11 +109,7 @@ public class MembersListActivity extends AppCompatActivity {
             TextView conditionTxt = (TextView) itemView.findViewById(R.id.item_conText);
             conditionTxt.setText(currentCar.getCondition());
             return itemView;
-
         }
-
-
     }
-
 }
 //finito

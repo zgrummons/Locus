@@ -1,11 +1,16 @@
 package com.vetealinfierno.locus;
 //***** 2/18/17 jGAT
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -18,25 +23,28 @@ import com.google.zxing.integration.android.IntentResult;
 //it will also need a joinButton for the manual entry of groupID
 public class JoinActivity extends AppCompatActivity {
     EditText groupID;
+    Button joinBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         groupID = (EditText) findViewById(R.id.GroupID_editText);
-
+        joinBtn = (Button) findViewById(R.id.join_Button);
     }
 
     public void UpdateNewMemMethod(View view){
         String groupIDString = groupID.getText().toString();
         if(!groupIDString.equals("")) {
+            //TODO: add update DB table with groupIDInt (manual input)
+            //TODO: use a method so both manual input and scanner can use it ^^^^
             int groupIDInt = Integer.parseInt(groupIDString);
             Toast.makeText(this, "Group ID = " + groupIDInt, Toast.LENGTH_LONG).show();
+            //enables the buttons for the students if the successfully joined a group
+            HomeActivity.GROUP_JOINED = true;
         }else{
             Toast.makeText(this, "ERROR: Enter a GroupID", Toast.LENGTH_LONG).show();
         }
-        //TODO: add update DB table with groupIDInt (manual input)
-        //TODO: use a method so both manual input and scanner can use it ^^^^
     }
 
     public void ScanQRCodeMethod(View view){
@@ -57,17 +65,15 @@ public class JoinActivity extends AppCompatActivity {
             if(result.getContents() == null){
                 Toast.makeText(this, "You Cancelled the scanning", Toast.LENGTH_LONG).show();
             }else{
-                Toast.makeText(this, result.getContents(), Toast.LENGTH_LONG).show();;
+                //TODO: add code that takes the data from result.getContents() and adds it to DB table
+                //TODO: use a method so both manual input and scanner can use it ^^^^
+                Toast.makeText(this, result.getContents(), Toast.LENGTH_LONG).show();
+                //enables the buttons for the students if the successfully joined a group
+                HomeActivity.GROUP_JOINED = true;
             }
         }else{
             super.onActivityResult(requestCode, resultCode, data);
         }
-        //TODO: add code that takes the data from result.getContents() and adds it to DB table
-        //TODO: use a method so both manual input and scanner can use it ^^^^
-
-
     }
 }
-
-
 //finito

@@ -20,13 +20,11 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 ///this is the QR code generator activity, this class/Activity might not be necessary for the
 //generating of a QR code but im new to this so im going to try it this way.
 public class QRGenActivity extends AppCompatActivity {
-    public static boolean GROUP_CREATED = false;
     EditText text;
     TextView groupID;
     Button gen_btn;
     ImageView image;
     String text2Qr;
-
 
     public void print(String s){
         Toast.makeText(this, s, Toast.LENGTH_LONG).show();
@@ -56,7 +54,7 @@ public class QRGenActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     //TODO: GROUP_CREATED only should be set true if successfully added group ID to DB table
-                    GROUP_CREATED = true;
+                    HomeActivity.GROUP_CREATED = true;
                     //TODO: the groupID should only be displayed if successfully added group ID to DB table
                     text2Qr = "Group ID: "+text2Qr;
                     groupID.setText(text2Qr);

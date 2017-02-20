@@ -11,7 +11,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 //this is the activity that will display the map and hopefully display location icons soon
 //write now it does nothing
-//TODO:make this activity functional by getting the google API, instructs in the values xml file
+//TODO:make this application upload the map according to the group leaders location
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;

@@ -16,6 +16,8 @@ public class HomeActivity extends AppCompatActivity {
     public Button leaveGroupBtn;
     public Button mapBtn;
     public Button membersBtn;
+    public static boolean GROUP_CREATED = false;
+    public static boolean GROUP_JOINED = false;
 
     ///called when activity is launched
     @Override
@@ -33,7 +35,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(QRGenActivity.GROUP_CREATED){
+        if(GROUP_CREATED||GROUP_JOINED){
             ToggleButtons(true);
         }
     }
@@ -70,13 +72,11 @@ public class HomeActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 
     }
-    //TODO: get the google api key for the mapsActivity
-    //TODO: the instructions for getting the key are in google_maps_api.xml file in the values folder of this project
+
+    //switches to mapsActivity were we hope to display the members as markers on the map
     public void switchToMapActivity(View view){
-        //Intent intent = new Intent(this, MapsActivity.class);
-        //startActivity(intent);
-        String message = "//TODO: get the google api key for the mapsActivity";
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, MapsActivity.class);
+        startActivity(intent);
     }
 
     //switches tot he membersListActivity were we display the list of members int he group
