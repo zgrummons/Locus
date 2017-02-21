@@ -10,16 +10,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.vetealinfierno.locus.JoinActivity">
 
-    <TextView
-        android:text="JoinActivity Started!"
-        android:textSize="30sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:id="@+id/textView3"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
     <Button
         android:text="Scan QR Code"
         android:onClick="ScanQRCodeMethod"
@@ -53,10 +43,10 @@
         android:onClick="UpdateNewMemMethod"
         android:layout_width="200sp"
         android:layout_height="65sp"
-        android:layout_marginTop="12dp"
         android:id="@+id/manJoin_Button"
         style="@android:style/Widget.Button.Toggle"
         android:layout_below="@+id/GroupID_editText"
+        android:layout_marginTop="5sp"
         android:layout_alignLeft="@+id/scanQRcode_button"
         android:layout_alignStart="@+id/scanQRcode_button" />
 
@@ -67,6 +57,16 @@
         android:layout_height="wrap_content"
         android:id="@+id/textView7"
         android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="Join Menu"
+        android:textSize="30sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        android:id="@+id/textView3"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
