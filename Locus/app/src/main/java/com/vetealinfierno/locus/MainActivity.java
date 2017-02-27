@@ -62,12 +62,12 @@ public class MainActivity extends AppCompatActivity {
 
     protected void getNewUserId()
     {
-        String connString = "jdbc:microsoft:sqlserver://99.64.48.184:1433;DatabaseName=locus";
+        String connString = "jdbc:jtds:sqlserver://99.64.48.184:1433;DatabaseName=locus";
         Connection conn = null;
         CallableStatement call = null;
 
         try {
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver").newInstance();
+            Class.forName("net.sourceforge.jtds.jdbc.Driver").newInstance();
             conn = DriverManager.getConnection(connString, "locus", "locus");
             String query = "EXEC getNewUserId NULL";
             call = conn.prepareCall(query);
