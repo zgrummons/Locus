@@ -29,7 +29,6 @@ public class HomeActivity extends AppCompatActivity {
         mapBtn = (Button) findViewById(R.id.map_button);
         membersBtn = (Button) findViewById(R.id.members_button);
         ToggleButtons(false);
-
     }
 
     @Override
