@@ -1,3 +1,5 @@
+package com.vetealinfierno.locus.Models;
+
 import android.widget.Toast;
 
 import java.sql.CallableStatement;
