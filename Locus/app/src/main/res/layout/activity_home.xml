@@ -21,45 +21,18 @@
         android:layout_centerHorizontal="true" />
 
     <Button
-        android:text="Create"
+        android:text="Members"
         android:textSize="20dp"
         android:layout_width="200sp"
-        android:layout_height="65sp"
-        android:onClick="switchToQRActivity"
-        android:id="@+id/create_button"
-        android:layout_marginTop="11dp"
-        style="@android:style/Widget.Button.Toggle"
-        android:elevation="10dp"
-        android:layout_below="@+id/textView2"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:text="Join"
-        android:textSize="20dp"
-        android:onClick="switchToJoinActivity"
-        android:id="@+id/join_Button"
-        android:layout_width="200sp"
+        android:onClick="switchToMemActivity"
+        android:id="@+id/members_button"
         android:layout_height="65sp"
         style="@android:style/Widget.Button.Toggle"
         android:elevation="20dp"
-        android:layout_below="@+id/create_button"
-        android:layout_marginTop="10sp"
-        android:layout_alignLeft="@+id/create_button"
-        android:layout_alignStart="@+id/create_button" />
-
-    <Button
-        android:text="Leave"
-        android:textSize="20dp"
-        android:layout_width="200sp"
-        android:onClick="LeaveGroupMethod"
-        android:id="@+id/leave_button"
-        android:layout_height="65sp"
-        style="@android:style/Widget.Button.Toggle"
-        android:elevation="20dp"
-        android:layout_below="@+id/join_Button"
-        android:layout_marginTop="10sp"
-        android:layout_alignLeft="@+id/join_Button"
-        android:layout_alignStart="@+id/join_Button" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/map_button"
+        android:layout_alignStart="@+id/map_button"
+        android:layout_marginBottom="18dp" />
 
     <Button
         android:text="Map"
@@ -70,22 +43,57 @@
         android:layout_height="65sp"
         style="@android:style/Widget.Button.Toggle"
         android:elevation="20dp"
-        android:layout_below="@+id/leave_button"
-        android:layout_marginTop="10sp"
+        android:layout_above="@+id/members_button"
         android:layout_alignLeft="@+id/leave_button"
-        android:layout_alignStart="@+id/leave_button" />
+        android:layout_alignStart="@+id/leave_button"
+        android:layout_marginBottom="10dp" />
 
     <Button
-        android:text="Members"
+        android:text="Leave"
         android:textSize="20dp"
         android:layout_width="200sp"
-        android:onClick="switchToMemActivity"
-        android:id="@+id/members_button"
+        android:onClick="LeaveGroupMethod"
+        android:id="@+id/leave_button"
         android:layout_height="65sp"
         style="@android:style/Widget.Button.Toggle"
         android:elevation="20dp"
-        android:layout_below="@+id/map_button"
-        android:layout_marginTop="10sp"
-        android:layout_alignLeft="@+id/map_button"
-        android:layout_alignStart="@+id/map_button" />
+        android:layout_above="@+id/map_button"
+        android:layout_alignLeft="@+id/join_Button"
+        android:layout_alignStart="@+id/join_Button"
+        android:layout_marginBottom="11dp" />
+
+    <Button
+        android:text="Join"
+        android:textSize="20dp"
+        android:onClick="switchToJoinActivity"
+        android:id="@+id/join_Button"
+        android:layout_width="200sp"
+        android:layout_height="65sp"
+        style="@android:style/Widget.Button.Toggle"
+        android:elevation="20dp"
+        android:layout_above="@+id/leave_button"
+        android:layout_alignLeft="@+id/create_button"
+        android:layout_alignStart="@+id/create_button"
+        android:layout_marginBottom="11dp" />
+
+    <Button
+        android:text="Create"
+        android:textSize="20dp"
+        android:layout_width="200sp"
+        android:layout_height="65sp"
+        android:onClick="switchToQRActivity"
+        android:id="@+id/create_button"
+        style="@android:style/Widget.Button.Toggle"
+        android:elevation="10dp"
+        android:layout_above="@+id/join_Button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtGroupId"
+        android:layout_below="@+id/textView2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12dp" />
 </RelativeLayout>
