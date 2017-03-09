@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background = "@color/colorDrkGreen"
-    tools:context="com.vetealinfierno.locus.MainActivity">
+    tools:context="com.vetealinfierno.locus.SplashActivity">
 
     <TextView
         android:layout_width="wrap_content"

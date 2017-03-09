@@ -77,17 +77,17 @@
         android:layout_marginBottom="11dp" />
 
     <Button
-        android:text="Create"
-        android:textSize="20dp"
-        android:layout_width="200sp"
-        android:layout_height="65sp"
-        android:onClick="switchToQRActivity"
         android:id="@+id/create_button"
         style="@android:style/Widget.Button.Toggle"
-        android:elevation="10dp"
+        android:layout_width="200sp"
+        android:layout_height="65sp"
         android:layout_above="@+id/join_Button"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="12dp" />
+        android:layout_marginBottom="12dp"
+        android:elevation="10dp"
+        android:onClick="switchToMapActivity"
+        android:text="Create"
+        android:textSize="20dp" />
 
     <TextView
         android:layout_width="wrap_content"

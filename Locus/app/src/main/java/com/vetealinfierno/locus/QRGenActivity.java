@@ -1,6 +1,7 @@
 package com.vetealinfierno.locus;
 //***** 2/18/17 jGAT
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.IBinder;
@@ -13,13 +14,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
-
 ///this is the QR code generator activity, this class/Activity might not be necessary for the
 //generating of a QR code but im new to this so im going to try it this way.
 public class QRGenActivity extends AppCompatActivity {
@@ -27,10 +26,39 @@ public class QRGenActivity extends AppCompatActivity {
     TextView groupID;
     Button gen_btn;
     ImageView image;
-    String text2Qr;
+    public static boolean QR_GEN =false;
+    public static Bitmap QR_CODE;
+    public static String TEXT2_QR;
 
     public void print(String s){
         Toast.makeText(this, s, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(QR_GEN){
+            ToggleQRGenBtn(false);
+        }else{
+            ToggleQRGenBtn(true);
+        }
+    }
+
+    //disables the creator of the group from creating more than one group at a time
+    public void ToggleQRGenBtn(boolean status){
+        String disabledTxt = "Disabled";
+        gen_btn.setEnabled(status);
+        gen_btn.setText(disabledTxt);
+        image.setImageBitmap(QR_CODE);
+        groupID.setText(TEXT2_QR);
+        if(status){
+            String generate = "Generate";
+            String na = "";
+            gen_btn.setEnabled(true);
+            gen_btn.setText(generate);
+            groupID.setText(na);
+            image.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -45,35 +73,45 @@ public class QRGenActivity extends AppCompatActivity {
         gen_btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                text2Qr = text.getText().toString().trim();
-                if (!text2Qr.equals("")) {
+                image.setVisibility(View.VISIBLE);
+                TEXT2_QR = text.getText().toString().trim();
+                if (!TEXT2_QR.equals("")) {
                     MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
                     try {
-                        BitMatrix bitMatrix = multiFormatWriter.encode(text2Qr, BarcodeFormat.QR_CODE, 400, 400);
+                        BitMatrix bitMatrix = multiFormatWriter.encode(TEXT2_QR, BarcodeFormat.QR_CODE, 400, 400);
                         BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-                        Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
-                        image.setImageBitmap(bitmap);
+                        QR_CODE = barcodeEncoder.createBitmap(bitMatrix);
+                        image.setImageBitmap(QR_CODE);
                     } catch (WriterException e) {
                         e.printStackTrace();
                     }
                     //TODO: add code to send the generated groupID to the data base to create group table
                     //TODO: GROUP_CREATED only should be set true if successfully added group ID to DB table
+                    //disables join and create btns, enables members, leave, map
                     HomeActivity.GROUP_CREATED = true;
+                    QR_GEN = true;
+                    ToggleQRGenBtn(false);
                     //TODO: the groupID should only be displayed if successfully added group ID to DB table
-                    text2Qr = "Group ID: "+text2Qr;
-                    groupID.setText(text2Qr);
+                    TEXT2_QR = "Group ID: "+TEXT2_QR;
+                    groupID.setText(TEXT2_QR);
                     closeKeyboard(QRGenActivity.this, gen_btn.getWindowToken());
                 }else{
                     print("Error: Enter Text First");
                 }
             }
-
         });
     }
 
     public static void closeKeyboard(Context c, IBinder windowToken) {
         InputMethodManager mgr = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
         mgr.hideSoftInputFromWindow(windowToken, 0);
+    }
+
+    public void homeBtnClick(View view){
+        //intent is telling android what we want to do which is (swithFrom.this, to something.class)
+        Intent intent = new Intent(this, HomeActivity.class);
+        ///starting the activity
+        startActivity(intent);
     }
 }
 //finito

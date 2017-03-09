@@ -1,6 +1,6 @@
 package com.vetealinfierno.locus;
 //***** 2/18/17 jGAT
-import android.app.ListActivity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,13 +12,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
-
 ///this activity will display a list of the members in the group
 ///needs a method that receives data from the DB table
-
 //TODO: add code that will update a list with data received from the DB table
 public class MembersListActivity extends AppCompatActivity {
     private List<Car> myCars = new ArrayList<Car>();
@@ -110,6 +107,12 @@ public class MembersListActivity extends AppCompatActivity {
             conditionTxt.setText(currentCar.getCondition());
             return itemView;
         }
+    }
+
+    public void switchToHomeActivity(View view){
+        //this starts a new activity if needed for generating QR code
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
     }
 }
 //finito
