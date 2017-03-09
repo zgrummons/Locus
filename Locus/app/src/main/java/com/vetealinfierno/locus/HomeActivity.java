@@ -23,7 +23,7 @@ import static com.vetealinfierno.locus.QRGenActivity.QR_GEN;
 //they appear on screen in the order above for the user
 public class HomeActivity extends AppCompatActivity {
 
-    public Button leaveGroupBtn, mapBtn, membersBtn, createGroupBtn, joinGroupBtn;
+    public Button leaveGroupBtn, mapBtn, membersBtn, createGroupBtn, joinGroupBtn, grpIDBtn;
     public static boolean GROUP_CREATED = false;
     public static boolean GROUP_JOINED = false;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
@@ -44,6 +44,7 @@ public class HomeActivity extends AppCompatActivity {
         membersBtn = (Button) findViewById(R.id.members_button);
         createGroupBtn = (Button) findViewById(R.id.create_button);
         joinGroupBtn = (Button) findViewById(R.id.join_Button);
+        grpIDBtn = (Button) findViewById(R.id.grpId_btn);
         ToggleButtons(false);
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this,
@@ -86,6 +87,7 @@ public class HomeActivity extends AppCompatActivity {
         leaveGroupBtn.setEnabled(status);
         mapBtn.setEnabled(status);
         membersBtn.setEnabled(status);
+        grpIDBtn.setVisibility(View.GONE);
         joinGroupBtn.setEnabled(!status);
         createGroupBtn.setEnabled(!status);
         if(!status){
@@ -101,6 +103,7 @@ public class HomeActivity extends AppCompatActivity {
             createGroupBtn.setText(disabledTxt);
             String leave;
             if(GROUP_CREATED){
+                grpIDBtn.setVisibility(View.VISIBLE);
                 leave = "Destroy Group";
             }else{
                 leave = "Leave";
@@ -121,6 +124,15 @@ public class HomeActivity extends AppCompatActivity {
         //intent is telling android what we want to do which is (swithFrom.this, to something.class)
         Intent intent = new Intent(this, JoinActivity.class);
         ///starting the activity
+        startActivity(intent);
+    }
+
+    //switches the activity to the QR code generator activity, this might not be necessary
+    //to have the generator in a new class but it will do for now. this occurs when the user
+    //presses the create_button on the home screen.
+    public void switchToQRActivity(View view){
+        //this starts a new activity if needed for generating QR code
+        Intent intent = new Intent(this, QRGenActivity.class);
         startActivity(intent);
     }
 

@@ -19,6 +19,10 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
+
+import static com.vetealinfierno.locus.HomeActivity.GROUP_CREATED;
+import static com.vetealinfierno.locus.HomeActivity.GROUP_JOINED;
+
 ///this is the QR code generator activity, this class/Activity might not be necessary for the
 //generating of a QR code but im new to this so im going to try it this way.
 public class QRGenActivity extends AppCompatActivity {
@@ -112,6 +116,16 @@ public class QRGenActivity extends AppCompatActivity {
         Intent intent = new Intent(this, HomeActivity.class);
         ///starting the activity
         startActivity(intent);
+    }
+
+    //switches tot he membersListActivity were we display the list of members int he group
+    public void switchToMemActivity(View view){
+        if(GROUP_CREATED || GROUP_JOINED) {
+            Intent intent = new Intent(this, MembersListActivity.class);
+            startActivity(intent);
+        }else{
+            Toast.makeText(this, "No Group Created, Use Generate", Toast.LENGTH_LONG).show();
+        }
     }
 }
 //finito
