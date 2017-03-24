@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +15,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -22,10 +28,13 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import static com.vetealinfierno.locus.HomeActivity.GROUP_CREATED;
 import static com.vetealinfierno.locus.HomeActivity.GROUP_JOINED;
+import static com.vetealinfierno.locus.HomeActivity.USER_ID;
+import static com.vetealinfierno.locus.JoinActivity.GROUP_ID;
 
 ///this is the QR code generator activity, this class/Activity might not be necessary for the
 //generating of a QR code but im new to this so im going to try it this way.
 public class QRGenActivity extends AppCompatActivity {
+
     EditText text;
     TextView groupID;
     Button gen_btn;
@@ -74,6 +83,7 @@ public class QRGenActivity extends AppCompatActivity {
         text = (EditText) findViewById(R.id.text);
         gen_btn = (Button) findViewById(R.id.gen_btn);
         image = (ImageView) findViewById(R.id.image);
+
         gen_btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -89,19 +99,36 @@ public class QRGenActivity extends AppCompatActivity {
                     } catch (WriterException e) {
                         e.printStackTrace();
                     }
-                    //TODO: add code to send the generated groupID to the data base to create group table
-                    //TODO: GROUP_CREATED only should be set true if successfully added group ID to DB table
                     //disables join and create btns, enables members, leave, map
                     HomeActivity.GROUP_CREATED = true;
+                    //creates the group
+                    createGroup(TEXT2_QR);
                     QR_GEN = true;
                     ToggleQRGenBtn(false);
-                    //TODO: the groupID should only be displayed if successfully added group ID to DB table
-                    TEXT2_QR = "Group ID: "+TEXT2_QR;
-                    groupID.setText(TEXT2_QR);
+                    String temp = "Group ID: "+TEXT2_QR;
+                    groupID.setText(temp);
                     closeKeyboard(QRGenActivity.this, gen_btn.getWindowToken());
                 }else{
                     print("Error: Enter Text First");
                 }
+            }
+        });
+    }
+
+    public void createGroup(final String groupID){
+        DatabaseReference dBRef;
+        dBRef = FirebaseDatabase.getInstance().getReference(groupID);
+        String id = dBRef.push().getKey();
+        USER_ID = id;
+        LatLng latLng = MapsActivity.mLatLng;
+        Double lat = latLng.latitude;
+        Double log = latLng.longitude;
+        String leadersLocation = lat.toString() +", "+ log.toString();
+        UserInfo user = new UserInfo(id, leadersLocation);
+        dBRef.child(id).setValue(user).addOnCompleteListener(this, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(getApplicationContext(), "Group: "+groupID+" Created", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -112,20 +139,21 @@ public class QRGenActivity extends AppCompatActivity {
     }
 
     public void homeBtnClick(View view){
-        //intent is telling android what we want to do which is (swithFrom.this, to something.class)
-        Intent intent = new Intent(this, HomeActivity.class);
-        ///starting the activity
-        startActivity(intent);
+        startActivity(new Intent(this, HomeActivity.class));
     }
 
     //switches tot he membersListActivity were we display the list of members int he group
     public void switchToMemActivity(View view){
         if(GROUP_CREATED || GROUP_JOINED) {
-            Intent intent = new Intent(this, MembersListActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, MembersListActivity.class));
         }else{
             Toast.makeText(this, "No Group Created, Use Generate", Toast.LENGTH_LONG).show();
         }
+    }
+
+    //switches to mapsActivity were we hope to display the members as markers on the map
+    public void switchToMap(View view){
+        startActivity(new Intent(this, MapsActivity.class));
     }
 }
 //finito

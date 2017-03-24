@@ -1,6 +1,5 @@
 package com.vetealinfierno.locus;
 //***** 2/18/17 jGAT
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -26,25 +25,32 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.vetealinfierno.locus.Models.GPSModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import static com.vetealinfierno.locus.HomeActivity.FIRST_JOIN;
 import static com.vetealinfierno.locus.HomeActivity.GROUP_CREATED;
 import static com.vetealinfierno.locus.HomeActivity.GROUP_JOINED;
+import static com.vetealinfierno.locus.HomeActivity.USER_ID;
+import static com.vetealinfierno.locus.JoinActivity.GROUP_ID;
 
 //this is the activity that will display the map and hopefully display location icons soon
 //the map only displays the current location of the user at this moment
-//TODO:make this application upload the map according to the group leaders or users location
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener{
 
+    private DatabaseReference dBRef;
     private GoogleMap mMap;
     public GoogleApiClient mGoogleApiClient;
     public Marker mCurrLocationMarker;
     public static LatLng mLatLng;
     public Button qr_btn;
     public Button mem_btn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +80,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onResume();
         if(GROUP_JOINED){
             ToggleButtons(true);
+        }else{
+            ToggleButtons(false);
         }
+    }
 
+    public void joinGroup(final String groupID, LatLng latLng){
+        dBRef = FirebaseDatabase.getInstance().getReference(groupID);
+        String id = dBRef.push().getKey();
+        USER_ID = id;
+        Double lat = latLng.latitude;
+        Double log = latLng.longitude;
+        String leadersLocation = lat.toString() +", "+ log.toString();
+        UserInfo user = new UserInfo(id, leadersLocation);
+        dBRef.child(id).setValue(user).addOnCompleteListener(this, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(MapsActivity.this, "You Have Joined Group: "+groupID, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     ///disables QR generation button because user has joined a group.
@@ -107,7 +130,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 //used to enable location layer which will allow a user to interact with current user location.
                 mMap.setMyLocationEnabled(true);
                 buildGoogleApiClient();
-
             }
         } else {
             buildGoogleApiClient();
@@ -135,26 +157,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (mCurrLocationMarker != null) {
                 mCurrLocationMarker.remove();
             }
-            //Place current location marker, getting coordinates for current location
-            //mLatLng = gps.getLocation();
             mLatLng = new LatLng(location.getLatitude(), location.getLongitude());
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(mLatLng);
             markerOptions.title("ME!!");
             if(GROUP_CREATED){
+                //TODO: add GetLocationFromDBToUpdateMarkers() to generate the MEMBERS markers on the map!!!!!!
                 markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
             }else if(GROUP_JOINED){
+                if(!FIRST_JOIN){
+                    FIRST_JOIN = true;
+                    joinGroup(GROUP_ID, mLatLng);
+                }
+                //TODO: add GetLocationFromDBToUpdateMarkers() to generate the LEADER's marker on the map!!!!!!
                 markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
             }else{
                 markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
             }
-
+            //TODO: add UpdateLocationsToDB() to update the group MEMBER's and LEADER's locations to DB!!!!!!
             mCurrLocationMarker = mMap.addMarker(markerOptions);
             //move map camera
             mMap.moveCamera(CameraUpdateFactory.newLatLng(mLatLng));
             //camera zoom into map
             mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
-            Toast.makeText(MapsActivity.this, "location = " + mLatLng,Toast.LENGTH_LONG).show();
+            //Toast.makeText(MapsActivity.this, "location = " + mLatLng, Toast.LENGTH_LONG).show();
             if (mGoogleApiClient != null) {
                 LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
             }
@@ -172,26 +198,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    //switches the activity to the QR code generator activity, this might not be necessary
-    //to have the generator in a new class but it will do for now. this occurs when the user
-    //presses the create_button on the home screen.
     public void switchToQRActivity(View view){
-        //this starts a new activity if needed for generating QR code
-        Intent intent = new Intent(this, QRGenActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(this, QRGenActivity.class));
     }
 
     public void switchToHomeActivity(View view){
-        //this starts a new activity if needed for generating QR code
-        Intent intent = new Intent(this, HomeActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(this, HomeActivity.class));
     }
 
     //switches tot he membersListActivity were we display the list of members int he group
     public void switchToMemActivity(View view){
         if(GROUP_CREATED || GROUP_JOINED) {
-            Intent intent = new Intent(this, MembersListActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, MembersListActivity.class));
         }else{
             Toast.makeText(this, "No Group Created, Use Group ID", Toast.LENGTH_LONG).show();
         }

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "855358614556",
+    "firebase_url": "https://api-project-855358614556.firebaseio.com",
+    "project_id": "api-project-855358614556",
+    "storage_bucket": "api-project-855358614556.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:855358614556:android:5a5f4d7e0708a7d4",
+        "android_client_info": {
+          "package_name": "com.vetealinfierno.locus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "855358614556-3j24ndm5d2pui04ulasfdpeki8o0lq29.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vetealinfierno.locus",
+            "certificate_hash": "147c527a5650fe7ce839692729821abbc47cecc7"
+          }
+        },
+        {
+          "client_id": "855358614556-kfkqde5f9k62kbq6u14pu1ml0cqku5dp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBoDN7L4oCDDgNbHREzjy1ghjxhRRbmo0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "855358614556-kfkqde5f9k62kbq6u14pu1ml0cqku5dp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -10,6 +10,18 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.vetealinfierno.locus.QRGenActivity">
 
+    <Button
+        android:id="@+id/map2_btn"
+        style="@android:style/Widget.Holo.Button.Toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/mem3_btn"
+        android:layout_alignBottom="@+id/mem3_btn"
+        android:layout_toEndOf="@+id/mem3_btn"
+        android:backgroundTint="@color/wallet_link_text_light"
+        android:onClick="switchToMap"
+        android:text="Map" />
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -87,4 +99,5 @@
         android:layout_alignBaseline="@+id/home_btn"
         android:layout_alignBottom="@+id/home_btn"
         android:layout_toEndOf="@+id/home_btn" />
+
 </RelativeLayout>
