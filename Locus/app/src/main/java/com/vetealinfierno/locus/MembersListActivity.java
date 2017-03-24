@@ -1,6 +1,6 @@
 package com.vetealinfierno.locus;
 //***** 2/18/17 jGAT
-import android.app.ListActivity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,25 +13,40 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
-
 ///this activity will display a list of the members in the group
-///needs a method that receives data from the DB table
-
-//TODO: add code that will update a list with data received from the DB table
 public class MembersListActivity extends AppCompatActivity {
-    private List<Car> myCars = new ArrayList<Car>();
+    //private List<Car> myCars = new ArrayList<Car>();
+    private DatabaseReference dBRef;
+    ListView listViewUser;
+    List<UserInfo> userList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_members_list);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        populateCarList();
-        populateListView();
-        registerClickCallback();
+        listViewUser = (ListView) findViewById(R.id.usersListView);
+        userList = new ArrayList<>();
+        if(HomeActivity.GROUP_CREATED){
+            dBRef = FirebaseDatabase.getInstance().getReference(QRGenActivity.TEXT2_QR);
+        }else{
+            dBRef = FirebaseDatabase.getInstance().getReference(JoinActivity.GROUP_ID);
+        }
+        Toast.makeText(this, dBRef.toString(), Toast.LENGTH_LONG).show();
+        //populateCarList();
+        //populateListView();
+        //registerClickCallback();
     }
-
+/*
     ///mock up list for the members list page
     private void populateCarList(){
         myCars.add(new Car("Chevrolet 210", 1955, R.drawable.ic_1, "Needs work"));
@@ -111,5 +126,32 @@ public class MembersListActivity extends AppCompatActivity {
             return itemView;
         }
     }
+*/
+    public void switchToHomeActivity(View view){
+        startActivity(new Intent(this, HomeActivity.class));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        dBRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userList.clear();
+                for(DataSnapshot userSnapShot: dataSnapshot.getChildren()){
+                    UserInfo user = userSnapShot.getValue(UserInfo.class);
+                    userList.add(user);
+                }
+                UserList adapter = new UserList(MembersListActivity.this, userList);
+                listViewUser.setAdapter(adapter);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
 }
 //finito

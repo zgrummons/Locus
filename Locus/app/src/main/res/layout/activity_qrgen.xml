@@ -10,19 +10,33 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.vetealinfierno.locus.QRGenActivity">
 
+    <Button
+        android:id="@+id/map2_btn"
+        style="@android:style/Widget.Holo.Button.Toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/mem3_btn"
+        android:layout_alignBottom="@+id/mem3_btn"
+        android:layout_toEndOf="@+id/mem3_btn"
+        android:backgroundTint="@color/wallet_link_text_light"
+        android:onClick="switchToMap"
+        android:text="Map" />
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="50sp"
         android:hint="Enter Text to Generate:"
         android:id="@+id/text"/>
+
     <Button
+        android:id="@+id/gen_btn"
+        style="@android:style/Widget.Button.Toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:layout_centerHorizontal="true"
         android:text="GENERATE"
-        android:id="@+id/gen_btn"/>
+        android:layout_below="@+id/text"
+        android:layout_alignParentEnd="true" />
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -35,7 +49,8 @@
         android:layout_below="@+id/view"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_height="275dp">
+        android:layout_height="275dp"
+        android:id="@+id/linearLayout">
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -52,7 +67,7 @@
         android:layout_centerHorizontal="true" />
 
     <TextView
-        android:text="QR Code Generator"
+        android:text="Group ID Generator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
@@ -60,4 +75,29 @@
         android:id="@+id/textView4"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/home_btn"
+        style="@android:style/Widget.Holo.Button.Toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/holo_green_dark"
+        android:onClick="homeBtnClick"
+        android:text="Home"
+        android:layout_alignBaseline="@+id/gen_btn"
+        android:layout_alignBottom="@+id/gen_btn"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/mem3_btn"
+        style="@android:style/Widget.Holo.Button.Toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/holo_orange_light"
+        android:onClick="switchToMemActivity"
+        android:text="Members"
+        android:layout_alignBaseline="@+id/home_btn"
+        android:layout_alignBottom="@+id/home_btn"
+        android:layout_toEndOf="@+id/home_btn" />
+
 </RelativeLayout>

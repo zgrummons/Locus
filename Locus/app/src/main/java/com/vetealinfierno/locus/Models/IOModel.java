@@ -1,3 +1,5 @@
+package com.vetealinfierno.locus.Models;
+
 import android.app.Activity;
 import android.content.SharedPreferences;
 

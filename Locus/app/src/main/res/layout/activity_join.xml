@@ -9,6 +9,14 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.vetealinfierno.locus.JoinActivity">
+    <Button
+        android:id="@+id/home4_btn"
+        style="@android:style/Widget.Holo.Button.Toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/holo_green_dark"
+        android:onClick="switchToHomeActivity"
+        android:text="Home" />
 
     <Button
         android:text="Scan QR Code"
