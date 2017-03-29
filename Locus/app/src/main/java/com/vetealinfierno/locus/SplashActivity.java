@@ -5,27 +5,24 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 //this is the SplashActivity it is the first activity that is called when the application is launched
 //this activity serves as the welcome screen to the user then calls the homeScreen activity after 4 seconds
 public class SplashActivity extends AppCompatActivity {
 
+    //region Android Life Cycle Methods Region ##########################################################################################
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        final int SPLASH_TIME_OUT = 3000;
+        final int SPLASH_TIME_OUT = 1000;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
         //handler keeps track of the count down to SPlashTimeOut
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run(){
-                //intent is telling android what we want to do (switchFrom.this, to something.class)
-                Intent homeIntent = new Intent(SplashActivity.this, HomeActivity.class);
-                ///starting the activity
-                startActivity(homeIntent);
-                //finish deletes the welcome screen from the "back stack mon"
+                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                 finish();
             }
         },SPLASH_TIME_OUT);
@@ -36,5 +33,6 @@ public class SplashActivity extends AppCompatActivity {
         super.onStop();
         //saveConfig();
     }
+    //endregion
 }
 //finito

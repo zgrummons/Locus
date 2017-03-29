@@ -14,7 +14,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="LOCUS"
+        android:text="@string/splash_largeTitle_text"
         android:textStyle="bold"
         android:textColor="#ffffffff"
         android:textSize="80sp"
@@ -24,14 +24,13 @@
         android:layout_centerHorizontal="true" />
 
     <TextView
-        android:text="Welcome to..."
-        android:textSize="15sp"
+        android:text="@string/greeting_splashGreeting_text"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
         android:textColor="#ffffffff"
         android:layout_marginTop="5sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView6"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 </RelativeLayout>

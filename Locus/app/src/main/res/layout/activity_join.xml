@@ -16,10 +16,10 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@android:color/holo_green_dark"
         android:onClick="switchToHomeActivity"
-        android:text="Home" />
+        android:text="@string/btn_home_text" />
 
     <Button
-        android:text="Scan QR Code"
+        android:text="@string/btn_scanQR_text"
         android:onClick="ScanQRCodeMethod"
         android:textSize="20sp"
         android:layout_width="200sp"
@@ -35,40 +35,37 @@
         android:inputType="number"
         android:ems="10"
         android:id="@+id/GroupID_editText"
-        android:hint="Enter Group ID #"
+        android:hint="@string/hint_enterGroupID_text"
         android:selectAllOnFocus="false"
-        android:singleLine="true"
         android:layout_width="200sp"
         android:textColorLink="@android:color/holo_green_dark"
         android:layout_below="@+id/scanQRcode_button"
-        android:layout_alignLeft="@+id/manJoin_Button"
         android:layout_alignStart="@+id/manJoin_Button"
         android:layout_marginTop="117dp" />
 
     <Button
-        android:text="Join"
-        android:textSize="20sp"
-        android:onClick="UpdateNewMemMethod"
-        android:layout_width="200sp"
-        android:layout_height="65sp"
         android:id="@+id/manJoin_Button"
         style="@android:style/Widget.Button.Toggle"
+        android:layout_width="200sp"
+        android:layout_height="65sp"
+        android:layout_alignStart="@+id/scanQRcode_button"
         android:layout_below="@+id/GroupID_editText"
         android:layout_marginTop="5sp"
-        android:layout_alignLeft="@+id/scanQRcode_button"
-        android:layout_alignStart="@+id/scanQRcode_button" />
+        android:text="@string/btn_enterGroupID_text"
+        android:textSize="20sp" />
 
     <TextView
-        android:text="                    or\nManually Enter Group ID"
+        android:text="@string/subtitle_manualEnterGroupID_text"
         android:textSize="20sp"
         android:layout_width="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         android:layout_height="wrap_content"
         android:id="@+id/textView7"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
     <TextView
-        android:text="Join Menu"
+        android:text="@string/title_joinMenu_text"
         android:textSize="30sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -76,5 +73,14 @@
         android:id="@+id/textView3"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:layout_above="@+id/textView7"
+        android:layout_centerHorizontal="true"
+        android:text="@string/subtitle_Or_text" />
 
 </RelativeLayout>

@@ -9,6 +9,17 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.vetealinfierno.locus.HomeActivity">
+
+    <Button
+        android:id="@+id/logOut_btn"
+        style="@android:style/Widget.Holo.Button.Toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:backgroundTint="@color/cast_intro_overlay_background_color"
+        android:text="@string/logoutBtn_text" />
+
     <Button
         android:id="@+id/grpId_btn"
         style="@android:style/Widget.Holo.Button.Toggle"
@@ -16,21 +27,21 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/cast_intro_overlay_button_background_color"
         android:onClick="switchToQRActivity"
-        android:text="Group ID"
-        android:layout_alignParentTop="true"
+        android:text="@string/groupIDBtn_text"
         android:layout_alignParentStart="true" />
     <TextView
-        android:text="Main Menu"
+        android:text="@string/title_homeActivity_text"
         android:textSize="25sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView2"
-        android:layout_alignBottom="@+id/grpId_btn"
+        android:layout_alignBaseline="@+id/logOut_btn"
+        android:layout_alignBottom="@+id/logOut_btn"
         android:layout_centerHorizontal="true" />
 
     <Button
-        android:text="Members"
-        android:textSize="20dp"
+        android:text="@string/btn_members_text"
+        android:textSize="20sp"
         android:layout_width="200sp"
         android:onClick="switchToMemActivity"
         android:id="@+id/members_button"
@@ -38,13 +49,12 @@
         style="@android:style/Widget.Button.Toggle"
         android:elevation="20dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/map_button"
         android:layout_alignStart="@+id/map_button"
         android:layout_marginBottom="18dp" />
 
     <Button
-        android:text="Map"
-        android:textSize="20dp"
+        android:text="@string/btn_map_text"
+        android:textSize="20sp"
         android:layout_width="200sp"
         android:onClick="switchToMapActivity"
         android:id="@+id/map_button"
@@ -52,13 +62,12 @@
         style="@android:style/Widget.Button.Toggle"
         android:elevation="20dp"
         android:layout_above="@+id/members_button"
-        android:layout_alignLeft="@+id/leave_button"
         android:layout_alignStart="@+id/leave_button"
         android:layout_marginBottom="10dp" />
 
     <Button
-        android:text="Leave"
-        android:textSize="20dp"
+        android:text="@string/btn_leave_text"
+        android:textSize="20sp"
         android:layout_width="200sp"
         android:onClick="LeaveGroupMethod"
         android:id="@+id/leave_button"
@@ -66,13 +75,12 @@
         style="@android:style/Widget.Button.Toggle"
         android:elevation="20dp"
         android:layout_above="@+id/map_button"
-        android:layout_alignLeft="@+id/join_Button"
         android:layout_alignStart="@+id/join_Button"
         android:layout_marginBottom="11dp" />
 
     <Button
-        android:text="Join"
-        android:textSize="20dp"
+        android:text="@string/btn_join_text"
+        android:textSize="20sp"
         android:onClick="switchToJoinActivity"
         android:id="@+id/join_Button"
         android:layout_width="200sp"
@@ -80,7 +88,6 @@
         style="@android:style/Widget.Button.Toggle"
         android:elevation="20dp"
         android:layout_above="@+id/leave_button"
-        android:layout_alignLeft="@+id/create_button"
         android:layout_alignStart="@+id/create_button"
         android:layout_marginBottom="11dp" />
 
@@ -94,8 +101,8 @@
         android:layout_marginBottom="12dp"
         android:elevation="10dp"
         android:onClick="switchToMapActivity"
-        android:text="Create"
-        android:textSize="20dp" />
+        android:text="@string/btn_create_text"
+        android:textSize="20sp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -104,4 +111,12 @@
         android:layout_below="@+id/textView2"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="12dp" />
+
+    <TextView
+        android:id="@+id/textView_greeting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/print_username_text"
+        android:layout_below="@+id/textView2"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

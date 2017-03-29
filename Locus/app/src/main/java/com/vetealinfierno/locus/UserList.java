@@ -1,5 +1,5 @@
 package com.vetealinfierno.locus;
-
+//***** 3/24/17 jGAT
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,11 +14,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
-/**
- * Created by johntoland on 3/22/17.
- */
-
 public class UserList extends ArrayAdapter<UserInfo> {
+
     private Activity context;
     private List<UserInfo> userList;
 
@@ -37,10 +34,11 @@ public class UserList extends ArrayAdapter<UserInfo> {
         TextView location = (TextView) listViewItem.findViewById(R.id.LatLng_TxtV);
 
         UserInfo user = userList.get(position);
-        String itemOne = "Member ID: "+user.getUserID();
-        String itemTwo = "Member Location: "+user.getUserLocation();
+        String itemOne = user.getStatus()+": "+user.getEmail();
+        String itemTwo = "Location: "+user.getUserLocation();
         name.setText(itemOne);
         location.setText(itemTwo);
         return listViewItem;
     }
 }
+//finito jGAT

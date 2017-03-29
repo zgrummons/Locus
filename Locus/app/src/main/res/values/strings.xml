@@ -1,4 +1,47 @@
 <resources>
+    <string name="greeting_splashGreeting_text">Welcome to...</string>
+    <string name="splash_largeTitle_text">LOCUS</string>
     <string name="app_name">Locus</string>
     <string name="title_activity_maps">Map</string>
+    <string name="loginTitle_text">User Login</string>
+    <string name="title_joinMenu_text">Join Menu</string>
+    <string name="title_groupIDGenerator_text">Group ID Generator</string>
+    <string name="title_accountCreation_text">User Registration</string>
+    <string name="title_homeActivity_text">Main Menu</string>
+    <string name="title_MembersActivity_text">Members Page</string>
+    <string name="subtitle_emailField_text">Email:</string>
+    <string name="subtitle_passwordField_text">Password:</string>
+    <string name="subtitle_Or_text">Or...</string>
+    <string name="subtitle_manualEnterGroupID_text">Manually enter Group ID here</string>
+    <string name="subtitle_userTypeQuestion_text">Are you a teacher?</string>
+    <string name="hint_enterGroupID_text">Enter Group ID Number</string>
+    <string name="email_hint">Enter Your Email</string>
+    <string name="confirm_email_hint">Confirm Email</string>
+    <string name="password_hint">Enter Your Password</string>
+    <string name="confirm_password_hint">Confirm Password</string>
+    <string name="btn_members_text">Members</string>
+    <string name="btn_map_text">Map</string>
+    <string name="btn_leave_text">Leave</string>
+    <string name="btn_join_text">Join</string>
+    <string name="btn_create_text">Create</string>
+    <string name="btn_home_text">Home</string>
+    <string name="btn_enterGroupID_text">Enter</string>
+    <string name="btn_scanQR_text">Scan QR Code</string>
+    <string name="signInBtn_text">Sign In</string>
+    <string name="submitBtn_text">Submit</string>
+    <string name="logoutBtn_text">Logout</string>
+    <string name="groupIDBtn_text">Group ID</string>
+    <string name="newUserLink_text">New user? Sign up here.</string>
+    <string name="existingUserLink_text">Already registered? Login here.</string>
+    <string name="print_username_text">username goes here</string>
+    <string name="print_groupID_text">Group ID:</string>
+    <string name="filler_name_text">Name:</string>
+    <string name="filler_location_text">Location:</string>
+
+
+    <array name="types">
+        <item>Choose</item>
+        <item>No</item>
+        <item>Yes</item>
+    </array>
 </resources>

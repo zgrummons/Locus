@@ -5,30 +5,33 @@ import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
-import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.vetealinfierno.locus.HomeActivity.GROUP_ID;
+
 ///this activity will display a list of the members in the group
 public class MembersListActivity extends AppCompatActivity {
+
+    public void print(String s){
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
+
+    //region Class Variables Region ##########################################################################################
     //private List<Car> myCars = new ArrayList<Car>();
     private DatabaseReference dBRef;
     ListView listViewUser;
     List<UserInfo> userList;
+    //endregion
+
+    //region Android Life Cycle Method Region ################################################################################
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,16 +39,36 @@ public class MembersListActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         listViewUser = (ListView) findViewById(R.id.usersListView);
         userList = new ArrayList<>();
-        if(HomeActivity.GROUP_CREATED){
-            dBRef = FirebaseDatabase.getInstance().getReference(QRGenActivity.TEXT2_QR);
-        }else{
-            dBRef = FirebaseDatabase.getInstance().getReference(JoinActivity.GROUP_ID);
-        }
-        Toast.makeText(this, dBRef.toString(), Toast.LENGTH_LONG).show();
+        dBRef = FirebaseDatabase.getInstance().getReference(GROUP_ID);
+        print(dBRef.toString());
         //populateCarList();
         //populateListView();
         //registerClickCallback();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        dBRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userList.clear();
+                for(DataSnapshot userSnapShot: dataSnapshot.getChildren()){
+                    UserInfo user = userSnapShot.getValue(UserInfo.class);
+                    userList.add(user);
+                }
+                UserList adapter = new UserList(MembersListActivity.this, userList);
+                listViewUser.setAdapter(adapter);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+    //endregion
+
+    //region Commented Out Cars List View Region #############################################################################
 /*
     ///mock up list for the members list page
     private void populateCarList(){
@@ -127,31 +150,13 @@ public class MembersListActivity extends AppCompatActivity {
         }
     }
 */
+    //endregion
+
+    //region Button Control Method Region ####################################################################################
     public void switchToHomeActivity(View view){
         startActivity(new Intent(this, HomeActivity.class));
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        dBRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                userList.clear();
-                for(DataSnapshot userSnapShot: dataSnapshot.getChildren()){
-                    UserInfo user = userSnapShot.getValue(UserInfo.class);
-                    userList.add(user);
-                }
-                UserList adapter = new UserList(MembersListActivity.this, userList);
-                listViewUser.setAdapter(adapter);
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
+    //endregion
 
 }
-//finito
+//finito jGAT
