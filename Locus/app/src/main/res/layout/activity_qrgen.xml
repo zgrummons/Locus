@@ -15,28 +15,14 @@
         style="@android:style/Widget.Holo.Button.Toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/mem3_btn"
-        android:layout_alignBottom="@+id/mem3_btn"
-        android:layout_toEndOf="@+id/mem3_btn"
         android:backgroundTint="@color/wallet_link_text_light"
         android:onClick="switchToMap"
-        android:text="Map" />
+        android:text="@string/btn_map_text"
+        android:layout_marginStart="21dp"
+        android:layout_alignBaseline="@+id/mem3_btn"
+        android:layout_alignBottom="@+id/mem3_btn"
+        android:layout_toEndOf="@+id/mem3_btn" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50sp"
-        android:hint="Enter Text to Generate:"
-        android:id="@+id/text"/>
-
-    <Button
-        android:id="@+id/gen_btn"
-        style="@android:style/Widget.Button.Toggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="GENERATE"
-        android:layout_below="@+id/text"
-        android:layout_alignParentEnd="true" />
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -47,7 +33,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_below="@+id/view"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_height="275dp"
         android:id="@+id/linearLayout">
@@ -61,13 +46,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/groupID_text"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textSize="20sp"
-        android:text="Group ID: N/A"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:text="@string/print_groupID_text"
+        android:layout_below="@+id/linearLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" />
 
     <TextView
-        android:text="Group ID Generator"
+        android:text="@string/title_groupIDGenerator_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
@@ -83,9 +70,9 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@android:color/holo_green_dark"
         android:onClick="homeBtnClick"
-        android:text="Home"
-        android:layout_alignBaseline="@+id/gen_btn"
-        android:layout_alignBottom="@+id/gen_btn"
+        android:text="@string/btn_home_text"
+        android:layout_alignBaseline="@+id/mem3_btn"
+        android:layout_alignBottom="@+id/mem3_btn"
         android:layout_alignParentStart="true" />
 
     <Button
@@ -95,9 +82,10 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@android:color/holo_orange_light"
         android:onClick="switchToMemActivity"
-        android:text="Members"
-        android:layout_alignBaseline="@+id/home_btn"
-        android:layout_alignBottom="@+id/home_btn"
-        android:layout_toEndOf="@+id/home_btn" />
+        android:text="@string/btn_members_text"
+        android:layout_marginTop="13dp"
+        android:layout_below="@+id/textView4"
+        android:layout_toEndOf="@+id/home_btn"
+        android:layout_marginStart="18dp" />
 
 </RelativeLayout>

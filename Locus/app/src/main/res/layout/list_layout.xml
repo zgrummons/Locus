@@ -8,11 +8,16 @@
         android:id="@+id/name_TxtV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Name" />
+        android:text="@string/filler_name_text" />
 
     <TextView
         android:id="@+id/LatLng_TxtV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Location" />
+        android:text="@string/filler_location_text" />
+    <View
+        android:id="@+id/view3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorDrkGreen"/>
 </LinearLayout>
