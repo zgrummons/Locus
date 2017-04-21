@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -59,10 +60,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     public GoogleApiClient mGoogleApiClient;
     public Marker mCurrLocationMarker;
+    public Marker[] groupMarkers = new Marker[10];
     public static LatLng mLatLng;
+    public LatLng[] groupLatLng = new LatLng[10];
+    public String[] memberIDs = new String[10];
+    public MarkerOptions[] groupMarkerOptions = new MarkerOptions[10];
     public Button qr_btn;
     public Button mem_btn;
-    List<UserInfo> userList;
+
     public FirebaseAuth firebaseAuth;
     public FirebaseUser firebaseUser;
     public String USER_EMAIL;
@@ -81,7 +86,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
         qr_btn = (Button) findViewById(R.id.qrCodeBtn);
         mem_btn = (Button) findViewById(R.id.mem2_btn);
-        userList = new ArrayList<>();
+
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         USER_EMAIL = firebaseUser.getEmail();
@@ -133,10 +138,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         dBRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                userList.clear();
                 for(DataSnapshot userSnapShot: dataSnapshot.getChildren()){
                     UserInfo user = userSnapShot.getValue(UserInfo.class);
-                    userList.add(user);
                     if(USER_EMAIL.equals(user.getEmail())){
                         String id = user.getUserID();
                         user.setStatus("Yes");
@@ -255,33 +258,118 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mCurrLocationMarker.remove();
             }
             mLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(mLatLng);
-            markerOptions.title("ME!!");
+            MarkerOptions userMarkerOptions = new MarkerOptions();
+            userMarkerOptions.position(mLatLng);
+            userMarkerOptions.title("ME!!");
             if(GROUP_CREATED){
-                //TODO: add GetLocationFromDBToUpdateMarkers() to generate the MEMBERS markers on the map!!!!!!
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                removeMarkers();
+                grabGroupMembersLocationFromDB();
+                updateMarkers();
+                userMarkerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
             }else if(GROUP_JOINED){
                 if(FIRST_JOIN){
                     FIRST_JOIN = false;
                     joinGroup(GROUP_ID, mLatLng);
                 }
-                //TODO: add GetLocationFromDBToUpdateMarkers() to generate the LEADER's marker on the map!!!!!!
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
+                removeMarkers();
+                grabGroupMembersLocationFromDB();
+                updateMarkers();
+                userMarkerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
             }else{
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                userMarkerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
             }
-            //TODO: add UpdateLocationsToDB() to update the group MEMBER's and LEADER's locations to DB!!!!!!
+            // updates the members location to database
             updateMemberLocationToDB(mLatLng);
-            mCurrLocationMarker = mMap.addMarker(markerOptions);
-            //move map camera
+            mCurrLocationMarker = mMap.addMarker(userMarkerOptions);
+            // move map camera
             mMap.moveCamera(CameraUpdateFactory.newLatLng(mLatLng));
-            //camera zoom into map
+            // camera zoom into map
             mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
             //Toast.makeText(MapsActivity.this, "location = " + mLatLng, Toast.LENGTH_LONG).show();
             if (mGoogleApiClient != null) {
                 LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
             }
+    }
+
+    public void grabGroupMembersLocationFromDB() {
+        DatabaseReference dBRef = FirebaseDatabase.getInstance().getReference(GROUP_ID);
+        dBRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int i = 0;
+                for(DataSnapshot locationSnapShot: dataSnapshot.getChildren()){
+                    UserInfo user = locationSnapShot.getValue(UserInfo.class);
+                    if(user.getStatus().contentEquals("Member") && GROUP_CREATED || !USER_EMAIL.equals(user.getEmail()) && GROUP_JOINED){
+                        memberIDs[i] = user.getEmail();
+                        addMemberLocationToArray(user.getUserLocation(), i);
+                        i++;
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    public void addMemberLocationToArray(String location, int i){
+        //print("i = "+ i);
+        groupLatLng[i] = StringToLatLng(location);
+        //print("groupLatLng["+i+"] = " + groupLatLng[i]);
+
+    }
+
+    public LatLng StringToLatLng(String location){
+        LatLng latLng;
+        String lat = location.substring(0,location.indexOf(','));
+        String lng = location.substring(location.indexOf(' '));
+        Double latDub = Double.parseDouble(lat);
+        Double lngDub = Double.parseDouble(lng);
+        latLng = new LatLng(latDub, lngDub);
+        return latLng;
+    }
+
+    public void removeMarkers(){
+        if(groupMarkers != null) {
+            for (int i = 0; i < groupMarkers.length; i++) {
+                if (groupMarkers[i] != null) {
+                    groupMarkers[i].remove();
+                }
+            }
+        }
+    }
+
+    public void updateMarkers(){
+        new Handler().postDelayed(new Runnable(){
+            @Override
+            public void run(){
+                for(int i = 0; i<groupLatLng.length; i++){
+                    if(groupLatLng[i] != null) {
+                        //print("inside placing the markers");
+                        groupMarkerOptions[i] = new MarkerOptions();
+                        groupMarkerOptions[i].position(groupLatLng[i]);
+                        // this will display the user email on the map
+                        groupMarkerOptions[i].title(memberIDs[i]);
+                        if (GROUP_JOINED) {
+                            if (i == 0) {
+                                //groupMarkerOptions[i].title("Leader");
+                                groupMarkerOptions[i].icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                            } else {
+                                //groupMarkerOptions[i].title("Member");
+                                groupMarkerOptions[i].icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                            }
+                            groupMarkers[i] = mMap.addMarker(groupMarkerOptions[i]);
+                        }else{
+                            //groupMarkerOptions[i].title("Member");
+                            groupMarkerOptions[i].icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                            groupMarkers[i] = mMap.addMarker(groupMarkerOptions[i]);
+                        }
+                    }
+                }
+            }
+        },4000);
     }
 
     @Override

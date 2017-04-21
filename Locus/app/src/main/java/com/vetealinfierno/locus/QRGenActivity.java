@@ -68,10 +68,8 @@ public class QRGenActivity extends AppCompatActivity {
         if(GROUP_CREATED) {
             generateGroupID();
         }else{
-            String randomGroupID = GenerateRandomNumber(3);
-            //print("Generated number = "+randomGroupID);
-            GROUP_ID = randomGroupID;
-            print(GROUP_ID);
+            GROUP_ID = GenerateRandomNumber(3);
+            //print(GROUP_ID);
             generateGroupID();
         }
 
