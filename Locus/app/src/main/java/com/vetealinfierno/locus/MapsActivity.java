@@ -17,6 +17,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -42,6 +43,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Date;
 
 import static com.vetealinfierno.locus.HomeActivity.FIRST_JOIN;
 import static com.vetealinfierno.locus.HomeActivity.GROUP_CREATED;
@@ -78,6 +81,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public FirebaseUser firebaseUser;
     public String USER_EMAIL;
     //endregion
+
+    //region Getting System Time ################################################################################################################
+    public String getTime(){
+        Date d = new Date();
+        CharSequence s = DateFormat.format("yyyy-MM-dd hh:mm:ss", d.getTime());
+        return s.toString();
+    }
+    //endregion###
 
     //region Android Life Cycle  Methods Region #################################################################################################
     @Override
@@ -141,7 +152,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String email = user.getEmail();
         String id = dBRef.push().getKey();
         String membersLocation = getLocationString(latLng);
-        UserInfo userInfo = new UserInfo(id, membersLocation, email, "Member", groupID, Integer.toString(SAFE_ZONE));
+        UserInfo userInfo = new UserInfo(id, membersLocation, email, "Member", groupID, Integer.toString(SAFE_ZONE), getTime());
         dBRef.child(id).setValue(userInfo);
 
         updateUserStatus(groupID, membersLocation);
@@ -377,8 +388,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void run(){
                 for(int i = 0; i<groupLatLng.length; i++){
                     if(groupLatLng[i] != null) {
-
-                        print("inside placing the markers, i = " + i);
+                        //print("inside placing the markers, i = " + i);
                         groupMarkerOptions[i] = new MarkerOptions();
                         groupMarkerOptions[i].position(groupLatLng[i]);
                         // this will display the user email on the map

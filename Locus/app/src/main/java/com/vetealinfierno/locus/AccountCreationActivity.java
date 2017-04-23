@@ -146,7 +146,7 @@ public class AccountCreationActivity extends AppCompatActivity implements View.O
         String email = user.getEmail();
         DatabaseReference dBRef = FirebaseDatabase.getInstance().getReference("Students");
         String id = dBRef.push().getKey();
-        UserInfo userInfo = new UserInfo(id, "Null", email, "No", "Null", "Null");
+        UserInfo userInfo = new UserInfo(id, "Null", email, "No", "Null", "Null", "Null");
         dBRef.child(id).setValue(userInfo).addOnCompleteListener(this, new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -163,7 +163,7 @@ public class AccountCreationActivity extends AppCompatActivity implements View.O
         String email = user.getEmail();
         DatabaseReference dBRef = FirebaseDatabase.getInstance().getReference("Teachers");
         String id = dBRef.push().getKey();
-        UserInfo userInfo = new UserInfo(id, "Null", email, "No", "Null", "Null");
+        UserInfo userInfo = new UserInfo(id, "Null", email, "No", "Null", "Null", "Null");
         dBRef.child(id).setValue(userInfo).addOnCompleteListener(this, new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
