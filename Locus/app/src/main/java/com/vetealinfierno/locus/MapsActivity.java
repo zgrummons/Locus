@@ -1,11 +1,17 @@
 package com.vetealinfierno.locus;
 //***** 2/18/17 jGAT
+
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -37,13 +43,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.vetealinfierno.locus.HomeActivity.FIRST_JOIN;
 import static com.vetealinfierno.locus.HomeActivity.GROUP_CREATED;
 import static com.vetealinfierno.locus.HomeActivity.GROUP_ID;
 import static com.vetealinfierno.locus.HomeActivity.GROUP_JOINED;
+import static com.vetealinfierno.locus.HomeActivity.SAFE_ZONE;
 
 //this is the activity that will display the map and hopefully display location icons soon
 //the map only displays the current location of the user at this moment
@@ -60,13 +64,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     public GoogleApiClient mGoogleApiClient;
     public Marker mCurrLocationMarker;
-    public Marker[] groupMarkers = new Marker[10];
     public static LatLng mLatLng;
-    public LatLng[] groupLatLng = new LatLng[10];
-    public String[] memberIDs = new String[10];
-    public MarkerOptions[] groupMarkerOptions = new MarkerOptions[10];
+    private final int MAX_GROUP_SIZE = 10;
+    public Marker[] groupMarkers = new Marker[MAX_GROUP_SIZE];
+    public LatLng[] groupLatLng = new LatLng[MAX_GROUP_SIZE];
+    public String[] memberIDs = new String[MAX_GROUP_SIZE];
+    public MarkerOptions[] groupMarkerOptions = new MarkerOptions[MAX_GROUP_SIZE];
     public Button qr_btn;
     public Button mem_btn;
+    private LocationRequest mLocationRequest;
 
     public FirebaseAuth firebaseAuth;
     public FirebaseUser firebaseUser;
@@ -78,7 +84,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        //gps = new GPSModel(this);
+        mLocationRequest = new LocationRequest();       //get quality of service for location updates from FusedLocationProvider API using requestLocationUpdates
+        mLocationRequest.setInterval(30000);
+        mLocationRequest.setFastestInterval(30000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -86,11 +95,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
         qr_btn = (Button) findViewById(R.id.qrCodeBtn);
         mem_btn = (Button) findViewById(R.id.mem2_btn);
-
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         USER_EMAIL = firebaseUser.getEmail();
-
+        for(int i =0; i<MAX_GROUP_SIZE; i++){
+            groupLatLng[i] = null;
+            groupMarkers[i] = null;
+            groupMarkerOptions[i] = null;
+            memberIDs[i] = null;
+        }
     }
 
     @Override
@@ -101,6 +114,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }else{
             ToggleButtons(false);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        USER_EMAIL = "";
     }
     //endregion
 
@@ -115,26 +134,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //endregion
 
     //region Joining Group Methods Region #######################################################################################################
-    public void joinGroup(final String groupID, LatLng latLng){
-        DatabaseReference dBRef = FirebaseDatabase.getInstance().getReference(groupID);
+    public void joinGroup(final String groupID, final LatLng latLng){
+        final DatabaseReference dBRef = FirebaseDatabase.getInstance().getReference(groupID);
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser user = firebaseAuth.getCurrentUser();
         String email = user.getEmail();
         String id = dBRef.push().getKey();
         String membersLocation = getLocationString(latLng);
-        UserInfo userInfo = new UserInfo(id, membersLocation, email, "Member", groupID);
-        dBRef.child(id).setValue(userInfo).addOnCompleteListener(this, new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(MapsActivity.this, "You Have Joined Group: "+groupID, Toast.LENGTH_SHORT).show();
-            }
-        });
-        updateUserStatus(groupID, membersLocation);
+        UserInfo userInfo = new UserInfo(id, membersLocation, email, "Member", groupID, Integer.toString(SAFE_ZONE));
+        dBRef.child(id).setValue(userInfo);
 
+        updateUserStatus(groupID, membersLocation);
+        removeMarkers();
+        grabGroupMembersLocationFromDB();
+        updateMarkers();
+        print("You have Joined Group " + groupID);
     }
 
     public void updateUserStatus(final String groupID, final String membersLocation){
-        DatabaseReference dBRef = FirebaseDatabase.getInstance().getReference("Students");
+        final DatabaseReference dBRef = FirebaseDatabase.getInstance().getReference("Students");
         dBRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -145,6 +163,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         user.setStatus("Yes");
                         user.setGroupID(groupID);
                         user.setUserLocation(membersLocation);
+                        user.setSafeZone(Integer.toString(SAFE_ZONE));
                         DatabaseReference dBRef = FirebaseDatabase.getInstance().getReference("Students");
                         dBRef.child(id).setValue(user).addOnCompleteListener(MapsActivity.this, new OnCompleteListener<Void>() {
                             @Override
@@ -154,7 +173,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         });
                         dBRef.removeEventListener(this);
                     }
+
                 }
+
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -170,9 +191,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         dBRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                int i = 0;
                 for(DataSnapshot locationSnapShot: dataSnapshot.getChildren()){
                     UserInfo user = locationSnapShot.getValue(UserInfo.class);
+                    memberIDs[i] = null;
+                    groupLatLng[i] = null;
+                    groupMarkers[i] = null;
+                    groupMarkerOptions[i] = null;
+                    i++;
                     if(USER_EMAIL.equals(user.getEmail())){
+                        //print("USER email = " + USER_EMAIL);
                         String id = user.getUserID();
                         String location = getLocationString(latLng);
                         user.setUserLocation(location);
@@ -192,6 +220,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
+        if(GROUP_CREATED || GROUP_JOINED){
+            removeMarkers();
+            grabGroupMembersLocationFromDB();
+            updateMarkers();
+        }
     }
     //endregion
 
@@ -239,11 +272,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        LocationRequest mLocationRequest;
-        mLocationRequest = new LocationRequest();       //get quality of service for location updates from FusedLocationProvider API using requestLocationUpdates
-        mLocationRequest.setInterval(1000);
-        mLocationRequest.setFastestInterval(1000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -258,67 +286,69 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mCurrLocationMarker.remove();
             }
             mLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+            // updates the members location to database
+            updateMemberLocationToDB(mLatLng);
             MarkerOptions userMarkerOptions = new MarkerOptions();
             userMarkerOptions.position(mLatLng);
             userMarkerOptions.title("ME!!");
             if(GROUP_CREATED){
-                removeMarkers();
-                grabGroupMembersLocationFromDB();
-                updateMarkers();
+                checkDistanceFromMembers(location);
                 userMarkerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
             }else if(GROUP_JOINED){
                 if(FIRST_JOIN){
                     FIRST_JOIN = false;
                     joinGroup(GROUP_ID, mLatLng);
+                }else{
+
+                    checkDistanceFromMembers(location);
                 }
-                removeMarkers();
-                grabGroupMembersLocationFromDB();
-                updateMarkers();
+
                 userMarkerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
             }else{
                 userMarkerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
             }
-            // updates the members location to database
-            updateMemberLocationToDB(mLatLng);
             mCurrLocationMarker = mMap.addMarker(userMarkerOptions);
             // move map camera
             mMap.moveCamera(CameraUpdateFactory.newLatLng(mLatLng));
             // camera zoom into map
             mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
-            //Toast.makeText(MapsActivity.this, "location = " + mLatLng, Toast.LENGTH_LONG).show();
+/*
             if (mGoogleApiClient != null) {
                 LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
             }
+*/
     }
 
     public void grabGroupMembersLocationFromDB() {
-        DatabaseReference dBRef = FirebaseDatabase.getInstance().getReference(GROUP_ID);
+        final DatabaseReference dBRef = FirebaseDatabase.getInstance().getReference(GROUP_ID);
         dBRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int i = 0;
                 for(DataSnapshot locationSnapShot: dataSnapshot.getChildren()){
                     UserInfo user = locationSnapShot.getValue(UserInfo.class);
+                    //print("User status = "+ user.getStatus());
                     if(user.getStatus().contentEquals("Member") && GROUP_CREATED || !USER_EMAIL.equals(user.getEmail()) && GROUP_JOINED){
                         memberIDs[i] = user.getEmail();
+                        //print(" i = " + i);
+                        //print("member id = " + memberIDs[i]);
                         addMemberLocationToArray(user.getUserLocation(), i);
                         i++;
                     }
                 }
+                dBRef.removeEventListener(this);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
-
     }
 
     public void addMemberLocationToArray(String location, int i){
         //print("i = "+ i);
         groupLatLng[i] = StringToLatLng(location);
         //print("groupLatLng["+i+"] = " + groupLatLng[i]);
-
     }
 
     public LatLng StringToLatLng(String location){
@@ -333,9 +363,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void removeMarkers(){
         if(groupMarkers != null) {
-            for (int i = 0; i < groupMarkers.length; i++) {
-                if (groupMarkers[i] != null) {
-                    groupMarkers[i].remove();
+            for (Marker marker : groupMarkers) {
+                if (marker != null) {
+                    marker.remove();
                 }
             }
         }
@@ -347,7 +377,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void run(){
                 for(int i = 0; i<groupLatLng.length; i++){
                     if(groupLatLng[i] != null) {
-                        //print("inside placing the markers");
+
+                        print("inside placing the markers, i = " + i);
                         groupMarkerOptions[i] = new MarkerOptions();
                         groupMarkerOptions[i].position(groupLatLng[i]);
                         // this will display the user email on the map
@@ -370,6 +401,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         },4000);
+    }
+
+    public void checkDistanceFromMembers(Location location) {
+        Location memberLocation = new Location("");
+        // user is a group leader check distance from each member
+        if (GROUP_CREATED) {
+            for (int i = 0; i < groupLatLng.length; i++) {
+                if (groupLatLng[i] != null) {
+                    memberLocation.setLatitude(groupLatLng[i].latitude);
+                    memberLocation.setLongitude(groupLatLng[i].longitude);
+                    // print("groupLatLng["+i+"] = "+ groupLatLng[i]);
+                    // print("distance between = " + location.distanceTo(memberLocation));
+                    // print("safe Zone = " + SAFE_ZONE);
+                    if (location.distanceTo(memberLocation) > SAFE_ZONE) {
+                       // print("member is far from leader");
+                        groupMarkerOptions[i].icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                        PushNotification(i, location.distanceTo(memberLocation));
+                    }
+                }
+            }
+        }else{
+            // user is a member check distance from leader
+            for(int i =0; i<1; i++){
+                if(groupLatLng[i] != null){
+                    memberLocation.setLatitude(groupLatLng[i].latitude);
+                    memberLocation.setLongitude(groupLatLng[i].longitude);
+                    // print("distance between = " + location.distanceTo(memberLocation));
+                    // print("safe zone = " + SAFE_ZONE);
+                    if (location.distanceTo(memberLocation) > SAFE_ZONE) {
+                        // print("you are far from leader");
+                        PushNotification(i , location.distanceTo(memberLocation));
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -404,6 +470,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(status){
             qr_btn.setVisibility(View.GONE);
         }
+    }
+    //endregion
+
+    //region PushNotifications ##################################################################################################################
+    public void PushNotification(int i, float distanceBetween){
+        String title;
+        if(GROUP_CREATED){
+            title = "Caliente: Member falling behind!";
+        }else{
+            title = "Caliente: Return to leader!";
+        }
+        long[] pattern = {500,500,500,500,500,500,500,500,500};
+        NotificationManager pushNotify = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        Intent intent = new Intent(this, MapsActivity.class);
+        PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
+        Notification notification = new Notification.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(memberIDs[i] +" is "+ (Math.floor(distanceBetween * 100) / 100)+ "meters from you.")
+                .setAutoCancel(true)
+                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
+                .setLights(Color.BLUE, 500, 500)
+                .setVibrate(pattern)
+                .setContentIntent(pIntent)
+                .build();
+        pushNotify.notify(0, notification);
     }
     //endregion
 

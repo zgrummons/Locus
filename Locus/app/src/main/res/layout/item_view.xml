@@ -13,30 +13,27 @@
         android:layout_alignParentStart="true" />
 
     <TextView
-        android:text="makeshownHere"
+        android:text="userStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/item_mkTxt"
+        android:id="@+id/item_userStatus"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/item_Icon"
         android:layout_marginStart="20dp" />
 
     <TextView
-        android:text="yearOfCar"
+        android:id="@+id/item_LastSeen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/item_yrTxt"
         android:layout_alignBottom="@+id/item_Icon"
-        android:layout_alignStart="@+id/item_mkTxt" />
+        android:layout_alignStart="@+id/item_userStatus"
+        android:text="lastSeenTime" />
 
-    <TextView
-        android:text="condition"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/item_conText"
-        android:layout_alignBaseline="@+id/item_yrTxt"
-        android:layout_alignBottom="@+id/item_yrTxt"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="29dp" />
+    <View
+        android:id="@+id/view3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignBottom="@+id/item_LastSeen"
+        android:background="@color/colorDrkGreen" />
 
 </RelativeLayout>

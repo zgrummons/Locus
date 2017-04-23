@@ -6,16 +6,20 @@ public class UserInfo {
     String email;
     String status;
     String groupID;
+    String safeZone;
+
 
     public UserInfo() {
+
     }
 
-    public UserInfo(String userID, String userLocation, String email, String status, String groupID) {
+    public UserInfo(String userID, String userLocation, String email, String status, String groupID, String safeZone) {
         this.userID = userID;
         this.userLocation = userLocation;
         this.email = email;
         this.status = status;
         this.groupID = groupID;
+        this.safeZone = safeZone;
     }
 
     public String getUserID() {
@@ -57,6 +61,15 @@ public class UserInfo {
     public void setGroupID(String groupID) {
         this.groupID = groupID;
     }
+
+    public String getSafeZone(){
+        return safeZone;
+    }
+
+    public void setSafeZone(String safeZone){
+        this.safeZone = safeZone;
+    }
+
 
 }
 //finito jGAT
