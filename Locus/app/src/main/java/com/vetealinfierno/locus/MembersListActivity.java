@@ -111,10 +111,7 @@ public class MembersListActivity extends AppCompatActivity {
             TextView location = (TextView) itemView.findViewById(R.id.item_LastSeen);
 
             String itemOne = currentUser.getStatus()+": "+currentUser.getEmail();
-
-            Date d = new Date();
-            CharSequence s = DateFormat.format("yyyy-MM-dd hh:mm:ss", d.getTime());
-            String itemTwo = "Last Seen: "+ s;
+            String itemTwo = "Last Seen: "+ currentUser.getTime();
 
             name.setText(itemOne);
             location.setText(itemTwo);

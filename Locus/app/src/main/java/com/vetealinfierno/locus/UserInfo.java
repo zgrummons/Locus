@@ -7,19 +7,21 @@ public class UserInfo {
     String status;
     String groupID;
     String safeZone;
+    String time;
 
 
     public UserInfo() {
 
     }
 
-    public UserInfo(String userID, String userLocation, String email, String status, String groupID, String safeZone) {
+    public UserInfo(String userID, String userLocation, String email, String status, String groupID, String safeZone, String time) {
         this.userID = userID;
         this.userLocation = userLocation;
         this.email = email;
         this.status = status;
         this.groupID = groupID;
         this.safeZone = safeZone;
+        this.time = time;
     }
 
     public String getUserID() {
@@ -68,6 +70,14 @@ public class UserInfo {
 
     public void setSafeZone(String safeZone){
         this.safeZone = safeZone;
+    }
+
+    public String getTime(){
+        return this.time;
+    }
+
+    public void setTime(String time){
+        this.time = time;
     }
 
 

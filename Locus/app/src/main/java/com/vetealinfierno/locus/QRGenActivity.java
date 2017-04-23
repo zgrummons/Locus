@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -138,7 +140,7 @@ public class QRGenActivity extends AppCompatActivity {
         String leadersLocation = setLocationString(mLatLng);
         dBRef = FirebaseDatabase.getInstance().getReference(groupID);
         String id = dBRef.push().getKey();
-        UserInfo userInfo = new UserInfo(id, leadersLocation, leaderEmail, "LEADER", groupID ,Integer.toString(SAFE_ZONE));
+        UserInfo userInfo = new UserInfo(id, leadersLocation, leaderEmail, "LEADER", groupID ,Integer.toString(SAFE_ZONE), getTime());
         dBRef.child(id).setValue(userInfo).addOnCompleteListener(this, new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -155,6 +157,12 @@ public class QRGenActivity extends AppCompatActivity {
             }
         });
         updateTeachersData(groupID, leadersLocation);
+    }
+
+    public String getTime(){
+        Date d = new Date();
+        CharSequence s = DateFormat.format("yyyy-MM-dd hh:mm:ss", d.getTime());
+        return s.toString();
     }
 
     public void updateTeachersData(final String groupID, final String leadersLocation){
