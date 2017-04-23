@@ -5,14 +5,17 @@ public class GroupInfo {
     String groupID;
     String groupLeader;
     String key;
+    String safeZone;
 
     public GroupInfo() {
+
     }
 
-    public GroupInfo(String key, String groupID, String groupLeader) {
+    public GroupInfo(String key, String groupID, String groupLeader, String safeZone) {
         this.key = key;
         this.groupID = groupID;
         this.groupLeader = groupLeader;
+        this.safeZone = safeZone;
     }
 
     public String getGroupID() {
@@ -34,5 +37,10 @@ public class GroupInfo {
     public void setGroupLeader(String groupLeader) {
         this.groupLeader = groupLeader;
     }
+
+    public String getSafeZone(){
+        return this.safeZone;
+    }
+
 }
 //finito jGAT

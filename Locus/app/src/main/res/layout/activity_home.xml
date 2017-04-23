@@ -100,7 +100,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="12dp"
         android:elevation="10dp"
-        android:onClick="switchToMapActivity"
         android:text="@string/btn_create_text"
         android:textSize="20sp" />
 

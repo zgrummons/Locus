@@ -2,22 +2,35 @@ package com.vetealinfierno.locus;
 //***** 2/18/17 jGAT
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.NumberPicker;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.identity.intents.AddressConstants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,6 +43,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import static com.vetealinfierno.locus.LoginActivity.LOGIN;
 import static com.vetealinfierno.locus.QRGenActivity.QR_GEN;
+import static com.vetealinfierno.locus.R.id.linearLayout;
 
 //this is the home activity the contains the home menu for the user
 //consists of the Create_button, Join_button, Leave_button, Map_button, Members_button
@@ -47,6 +61,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public static boolean GROUP_CREATED = false;
     public static boolean GROUP_JOINED = false;
     public static boolean FIRST_JOIN = true;
+    public static int SAFE_ZONE;
     public static String GROUP_ID = "";
     public Button leaveGroupBtn, mapBtn, membersBtn, createGroupBtn, joinGroupBtn, grpIDBtn, logoutBtn;
     public boolean hiddenButtons = false;
@@ -54,6 +69,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public FirebaseAuth firebaseAuth;
     public FirebaseUser firebaseUser;
     private ProgressDialog pD;
+    public EditText txt;
     //endregion
 
     //region Android Life Cycle Region ######################################################################################
@@ -74,6 +90,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
         userEmail = firebaseUser.getEmail();
         String greeting = "Welcome " + userEmail;
+
         leaveGroupBtn = (Button) findViewById(R.id.leave_button);
         mapBtn = (Button) findViewById(R.id.map_button);
         membersBtn = (Button) findViewById(R.id.members_button);
@@ -90,7 +107,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
         logoutBtn = (Button) findViewById(R.id.logOut_btn);
+
         logoutBtn.setOnClickListener(this);
+        createGroupBtn.setOnClickListener(this);
         hideButtons();
         isTeacherLoggedIn();
     }
@@ -98,9 +117,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
-        String status = "Group Created = " + GROUP_CREATED;
-        //Toast.makeText(HomeActivity.this, status, Toast.LENGTH_SHORT).show();
-
     }
 
     @Override
@@ -208,7 +224,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 pD.dismiss();
                 startMapActivity();
             }
-        },2000);
+        },3000);
     }
     //endregion
 
@@ -226,7 +242,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                             hasAGroup = true;
                             //print("Teacher has a group");
                             GROUP_ID = userInfo.getGroupID();
-                            print(GROUP_ID);
+                            SAFE_ZONE = Integer.parseInt(userInfo.getSafeZone());
+                            //print(GROUP_ID);
+                            //print("safe Zone = " + SAFE_ZONE);
                             if(LOGIN){
                                 loadGroup();
                             }
@@ -239,6 +257,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     ToggleButtons(true);
                 }else{
                     ToggleButtons(false);
+                    joinGroupBtn.setEnabled(false);
+                    String disabled = "Disabled";
+                    joinGroupBtn.setText(disabled);
                     LOGIN = false;
                 }
                 dBRef.removeEventListener(this);
@@ -264,6 +285,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                             hasAGroup = true;
                             //print("Student has a group");
                             GROUP_ID = userInfo.getGroupID();
+                            SAFE_ZONE = Integer.parseInt(userInfo.getSafeZone());
                             if(LOGIN){
                                 loadGroup();
                             }
@@ -311,6 +333,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         AlertDialog.Builder mBuild = new AlertDialog.Builder(HomeActivity.this);
         mBuild.setTitle("Confirmation:");
         mBuild.setMessage("Are you sure?");
+        mBuild.setIcon(R.mipmap.ic_launcher);
         mBuild.setCancelable(false);
         mBuild.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
@@ -333,8 +356,58 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         startMapActivity();
     }
 
+    public void createGroupBtnPressed(){
+        showSafeZoneDialog();
+    }
+
+    public void showSafeZoneDialog(){
+        Context mContext = HomeActivity.this;
+        RelativeLayout linearLayout = new RelativeLayout(mContext);
+        final NumberPicker aNumberPicker = new NumberPicker(mContext);
+        aNumberPicker.setMaxValue(50);
+        aNumberPicker.setMinValue(15);
+        aNumberPicker.setClickable(false);
+        aNumberPicker.setBackgroundColor(Color.LTGRAY);
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(50, 50);
+        RelativeLayout.LayoutParams numPicerParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        numPicerParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+
+        linearLayout.setLayoutParams(params);
+        linearLayout.setBackgroundColor(getResources().getColor(R.color.colorSlightDrkGreen));
+        linearLayout.addView(aNumberPicker,numPicerParams);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
+        alertDialogBuilder.setTitle("Choose Safe Zone Size:");
+        alertDialogBuilder.setMessage("Please select your number in meters...");
+        alertDialogBuilder.setView(linearLayout);
+        alertDialogBuilder.setIcon(R.mipmap.ic_launcher);
+        alertDialogBuilder.setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //Log.e("","New Quantity Value : "+ aNumberPicker.getValue());
+                                SAFE_ZONE = aNumberPicker.getValue();
+                                //print("number picker = "+aNumberPicker.getValue());
+                                if(SAFE_ZONE < 15){
+                                    print("Error: Cannot be less than 15");
+                                }else if(SAFE_ZONE > 50){
+                                    print("Error: Cannot be greater than 50");
+                                }else{
+                                    print("safe zone = " + SAFE_ZONE);
+                                    startMapActivity();
+                                }
+                            }
+                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                                print("You selected cancel, no group created.");
+                            }
+                        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    // starts the map activity
     public void startMapActivity(){
-        //finish();
         startActivity(new Intent(this, MapsActivity.class));
     }
 
@@ -357,7 +430,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             finish();
             Intent intent = new Intent(this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            getFragmentManager().popBackStack();
             startActivity(intent);
+        }else if(view == createGroupBtn){
+            createGroupBtnPressed();
         }
     }
     //endregion
@@ -421,7 +498,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     //region Destroy/Remove Member Methods Region ###########################################################################
     public void removeMember(){
-        print(GROUP_ID);
+        //print(GROUP_ID);
         final DatabaseReference dBRef = FirebaseDatabase.getInstance().getReference(GROUP_ID);
         dBRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -453,6 +530,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         user.setStatus(NO);
                         user.setGroupID(NULL);
                         user.setUserLocation(NULL);
+                        user.setSafeZone(NULL);
                         DatabaseReference dBRef = FirebaseDatabase.getInstance().getReference("Students");
                         dBRef.child(id).setValue(user).addOnCompleteListener(HomeActivity.this, new OnCompleteListener<Void>() {
                             @Override
@@ -481,6 +559,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         user.setStatus(NO);
                         user.setGroupID(NULL);
                         user.setUserLocation(NULL);
+                        user.setSafeZone(NULL);
                         DatabaseReference dBRef = FirebaseDatabase.getInstance().getReference("Teachers");
                         dBRef.child(id).setValue(user).addOnCompleteListener(HomeActivity.this, new OnCompleteListener<Void>() {
                             @Override
@@ -524,12 +603,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot userSnapShot: dataSnapshot.getChildren()){
                     UserInfo user = userSnapShot.getValue(UserInfo.class);
-                    print("Inside remove students = " +groupID);
+                    //print("Inside remove students = " +groupID);
                     if(groupID.equals(user.getGroupID())){
                         String id = user.getUserID();
                         user.setStatus(NO);
                         user.setGroupID(NULL);
                         user.setUserLocation(NULL);
+                        user.setSafeZone(NULL);
                         DatabaseReference dBRef = FirebaseDatabase.getInstance().getReference("Students");
                         dBRef.child(id).setValue(user).addOnCompleteListener(HomeActivity.this, new OnCompleteListener<Void>() {
                             @Override
@@ -553,6 +633,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void removeDestroy() {
+        getFragmentManager().popBackStack();
         ToggleButtons(false);
         if(GROUP_CREATED){
             removeStudentsFromGroup(GROUP_ID);
@@ -562,6 +643,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             GROUP_CREATED = false;
             QR_GEN = false;
             GROUP_ID = "";
+            joinGroupBtn.setEnabled(false);
+            String disabled = "Disabled";
+            joinGroupBtn.setText(disabled);
             Toast.makeText(this, "You have selected \"Yes\".\nGroup destroyed.", Toast.LENGTH_LONG).show();
         }else if(GROUP_JOINED){
             removeMember();
@@ -572,7 +656,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             setStudentButtons();
             Toast.makeText(this, "You have selected \"Yes\".\nYou have left the group.", Toast.LENGTH_LONG).show();
         }
-
     }
     //endregion
 

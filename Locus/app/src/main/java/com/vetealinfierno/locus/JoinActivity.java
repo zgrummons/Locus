@@ -21,6 +21,7 @@ import com.google.zxing.integration.android.IntentResult;
 
 import static com.vetealinfierno.locus.HomeActivity.GROUP_ID;
 import static com.vetealinfierno.locus.HomeActivity.GROUP_JOINED;
+import static com.vetealinfierno.locus.HomeActivity.SAFE_ZONE;
 
 //this is the joinActivity serves as the join screen for the user
 //this screen will need the scanQRcode_button (pulls up camera to scan QRcode)
@@ -118,6 +119,7 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
                 for(DataSnapshot groupSnapShot: dataSnapshot.getChildren()){
                     GroupInfo groupInfo = groupSnapShot.getValue(GroupInfo.class);
                     if(groupID.equals(groupInfo.getGroupID())){
+                        SAFE_ZONE = Integer.parseInt(groupInfo.getSafeZone());
                         dBRef.removeEventListener(this);
                         setGroupExists(true);
                     }
@@ -138,7 +140,7 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
 
     public void setGroupExists(boolean in){
         GROUP_ID_EXISTS = in;
-        print(""+GROUP_ID_EXISTS);
+        //print(""+GROUP_ID_EXISTS);
     }
     //endregion
 

@@ -32,6 +32,7 @@ import java.util.Random;
 import static com.vetealinfierno.locus.HomeActivity.GROUP_CREATED;
 import static com.vetealinfierno.locus.HomeActivity.GROUP_ID;
 import static com.vetealinfierno.locus.HomeActivity.GROUP_JOINED;
+import static com.vetealinfierno.locus.HomeActivity.SAFE_ZONE;
 import static com.vetealinfierno.locus.MapsActivity.mLatLng;
 
 ///this is the QR code generator activity, this class/Activity might not be necessary for the
@@ -137,7 +138,7 @@ public class QRGenActivity extends AppCompatActivity {
         String leadersLocation = setLocationString(mLatLng);
         dBRef = FirebaseDatabase.getInstance().getReference(groupID);
         String id = dBRef.push().getKey();
-        UserInfo userInfo = new UserInfo(id, leadersLocation, leaderEmail, "LEADER", groupID);
+        UserInfo userInfo = new UserInfo(id, leadersLocation, leaderEmail, "LEADER", groupID ,Integer.toString(SAFE_ZONE));
         dBRef.child(id).setValue(userInfo).addOnCompleteListener(this, new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -146,7 +147,7 @@ public class QRGenActivity extends AppCompatActivity {
         });
         dBRef = FirebaseDatabase.getInstance().getReference("Groups");
         String id2 = dBRef.push().getKey();
-        GroupInfo groupInfo = new GroupInfo(id2, groupID,leaderEmail);
+        GroupInfo groupInfo = new GroupInfo(id2, groupID,leaderEmail, Integer.toString(SAFE_ZONE));
         dBRef.child(id2).setValue(groupInfo).addOnCompleteListener(this, new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -170,6 +171,7 @@ public class QRGenActivity extends AppCompatActivity {
                         user.setStatus("Yes");
                         user.setGroupID(groupID);
                         user.setUserLocation(leadersLocation);
+                        user.setSafeZone(Integer.toString(SAFE_ZONE));
                         final DatabaseReference dBRef = FirebaseDatabase.getInstance().getReference("Teachers");
                         dBRef.child(id).setValue(user).addOnCompleteListener(QRGenActivity.this, new OnCompleteListener<Void>() {
                             @Override
@@ -203,7 +205,6 @@ public class QRGenActivity extends AppCompatActivity {
 
     public void homeBtnClick(View view){
         startActivity(new Intent(this, HomeActivity.class));
-
     }
 
     //switches tot he membersListActivity were we display the list of members int he group
@@ -218,7 +219,6 @@ public class QRGenActivity extends AppCompatActivity {
     //switches to mapsActivity were we hope to display the members as markers on the map
     public void switchToMap(View view){
         startActivity(new Intent(this, MapsActivity.class));
-
     }
     //endregion
 }
